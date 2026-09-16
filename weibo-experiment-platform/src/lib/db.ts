@@ -28,7 +28,7 @@ function cn(name: string): string { return PREFIX + name; }
 export { cn };
 
 function getUri(): string {
-  return process.env.MONGO_URI || 'mongodb://root:IS%23514_ca@localhost:27017/';
+  return process.env.MONGO_URI || 'mongodb://localhost:27017/';
 }
 
 export async function getDb(): Promise<Db> {

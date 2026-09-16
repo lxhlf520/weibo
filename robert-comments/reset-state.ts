@@ -1,8 +1,9 @@
 /** 清除全部 unified_ 断点（配合已存帖子跳过+进程内去重，重新全量搜索入队） */
+import 'dotenv/config';
 import { MongoClient } from 'mongodb';
 
 async function main() {
-  const client = new MongoClient('mongodb://localhost:27017');
+  const client = new MongoClient(process.env.MONGO_URL || 'mongodb://localhost:27017');
   await client.connect();
   const col = client.db('robert_comments').collection('crawl_state');
   const res = await col.deleteMany({ task_key: /^unified_/ });

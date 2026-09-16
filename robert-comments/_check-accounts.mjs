@@ -1,6 +1,7 @@
 /** 冒烟前置：账号池状态检查 */
+import 'dotenv/config';
 import { MongoClient } from 'mongodb';
-const c = new MongoClient('mongodb://localhost:27017');
+const c = new MongoClient(process.env.MONGO_URL || 'mongodb://localhost:27017');
 await c.connect();
 const accs = await c.db('test_experiment').collection('weibo_accounts')
   .find({}, { projection: { nickname: 1, weibo_uid: 1, status: 1 } }).sort({ _id: 1 }).toArray();

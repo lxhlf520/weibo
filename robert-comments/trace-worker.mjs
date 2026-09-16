@@ -54,7 +54,7 @@ const fmt = (ts) => new Date(ts + 8 * 3600 * 1000).toISOString().replace('T', ' 
 const log = (...a) => console.log(`[${WORKER}]`, ...a);
 
 // ── MongoDB ──
-const mgo = new MongoClient('mongodb://localhost:27017');
+const mgo = new MongoClient(process.env.MONGO_URL || 'mongodb://localhost:27017');
 await mgo.connect();
 const sup = mgo.db('weibo_supplement');
 const pas = sup.collection('passive_ai_posts');

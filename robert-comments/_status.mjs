@@ -1,6 +1,7 @@
 /** 采集状态监控：队列进度 / 卡死任务 / 速率 / 结果分布 / 风控信号 */
+import 'dotenv/config';
 import { MongoClient } from 'mongodb';
-const mgo = new MongoClient('mongodb://localhost:27017');
+const mgo = new MongoClient(process.env.MONGO_URL || 'mongodb://localhost:27017');
 await mgo.connect();
 const sup = mgo.db('weibo_supplement');
 const ts = sup.collection('trace_state');

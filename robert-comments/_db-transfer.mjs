@@ -10,6 +10,7 @@
  * 文件布局: <dir>/<db>/<collection>.jsonl + <collection>.meta.json(索引定义)
  * 导入策略: 先插数据(ordered:false 跳过重复键)，后建索引
  */
+import 'dotenv/config';
 import * as fs from 'fs';
 import * as path from 'path';
 import { MongoClient, BSON } from 'mongodb';
@@ -18,7 +19,7 @@ const EJSON = BSON.EJSON;
 const [MODE, DBNAME, DIR = '_dump'] = process.argv.slice(2);
 if (!MODE) { console.log('用法: node _db-transfer.mjs export|import|list <db> [dir]'); process.exit(1); }
 
-const mgo = new MongoClient('mongodb://localhost:27017');
+const mgo = new MongoClient(process.env.MONGO_URL || 'mongodb://localhost:27017');
 await mgo.connect();
 
 if (MODE === 'list') {

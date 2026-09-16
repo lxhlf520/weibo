@@ -1,6 +1,7 @@
 /** 暂停收尾：重置 working → pending（硬停止残留）+ 进度快照 */
+import 'dotenv/config';
 import { MongoClient } from 'mongodb';
-const mgo = new MongoClient('mongodb://localhost:27017');
+const mgo = new MongoClient(process.env.MONGO_URL || 'mongodb://localhost:27017');
 await mgo.connect();
 const sup = mgo.db('weibo_supplement');
 const ts = sup.collection('trace_state');

@@ -2,7 +2,7 @@
  * 微博评论模板本地导入（80 条：low 40 + high 40）
  * 数据源: _weibo_templates_80.json（从 docx 提取）
  * 行为与 ensureTemplates 一致：按 (post_group, content) upsert；不在清单内的旧模板标记 is_active=false
- * 运行: $env:MONGO_URI='mongodb://root:IS%23514_ca@localhost:27017/'; npx tsx import-weibo-templates.ts
+ * 运行: $env:MONGO_URI='mongodb://localhost:27017/'; npx tsx import-weibo-templates.ts
  */
 import fs from 'fs';
 import path from 'path';

@@ -12,7 +12,7 @@
 import { MongoClient } from 'mongodb';
 
 // ============ 配置 ============
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://root:IS%23514_ca@localhost:27017/';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/';
 
 async function backfill(dbName: string) {
   const client = new MongoClient(MONGO_URI, {

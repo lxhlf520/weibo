@@ -1,6 +1,7 @@
 /** 采集进度权威统计（数据库口径） */
+import 'dotenv/config';
 import { MongoClient } from 'mongodb';
-const c = new MongoClient('mongodb://localhost:27017');
+const c = new MongoClient(process.env.MONGO_URL || 'mongodb://localhost:27017');
 await c.connect();
 const sup = c.db('weibo_supplement');
 const state = sup.collection('trace_state');
