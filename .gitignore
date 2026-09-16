@@ -56,6 +56,7 @@ robert-comments/test-*.ts
 !robert-comments/_db-transfer.mjs
 weibo-experiment-platform/test-*.ts
 weibo-experiment-platform/_*.ts
+weibo-experiment-platform/src/jobs/_*.ts
 weibo-experiment-platform/add-accounts.ts
 weibo-experiment-platform/check-accounts.ts
 weibo-experiment-platform/insert-account.ts
