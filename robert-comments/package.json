@@ -1,0 +1,23 @@
+{
+  "name": "robert-comments",
+  "version": "1.0.0",
+  "description": "微博罗伯特评论采集 - 主动/被动评论回溯与每日增量",
+  "private": true,
+  "scripts": {
+    "backfill": "npx tsx backfill.ts",
+    "collect": "npx tsx collect-daily.ts",
+    "status": "npx tsx check-status.ts",
+    "scheduler": "npx tsx src/scheduler.ts"
+  },
+  "dependencies": {
+    "mongodb": "^6.8.0",
+    "node-cron": "^3.0.3",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "tsx": "^4.19.1",
+    "@types/node": "^22.5.0",
+    "@types/node-cron": "^3.0.11"
+  }
+}

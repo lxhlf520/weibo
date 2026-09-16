@@ -1,0 +1,20 @@
+@echo off
+chcp 65001 >nul
+echo ============================================
+echo   微博实验平台 - 启动调度器【脱敏模板】
+echo ============================================
+echo.
+echo 使用前：复制本文件为 start-scheduler.bat，填入真实 SMTP 凭据
+
+:: ── 邮件通知配置（网易163 SMTP）──
+set SMTP_USER=<你的163邮箱@163.com>
+set SMTP_AUTH_CODE=<163邮箱授权码>
+set TO_EMAIL=<收件邮箱>
+
+echo [邮件] SMTP_USER=%SMTP_USER%
+echo [邮件] 收件人: %TO_EMAIL%
+echo.
+
+echo 启动调度器...
+npx tsx src/jobs/scheduler.ts
+pause

@@ -1,0 +1,44 @@
+# 多进程并行采集：6 个进程，每个负责 1/6 日期范围，独立 Cookie【脱敏模板】
+# 使用前：复制本文件为 start-parallel.ps1，在 $COOKIES 中填入 6 个账号的 Cookie
+$COOKIES = @(
+    "<微博Cookie-1>",
+    "<微博Cookie-2>",
+    "<微博Cookie-3>",
+    "<微博Cookie-4>",
+    "<微博Cookie-5>",
+    "<微博Cookie-6>"
+)
+
+# 6 段日期（每段约 86 天）
+$DATE_RANGES = @(
+    @("2023-12-02", "2024-02-25"),
+    @("2024-02-26", "2024-05-22"),
+    @("2024-05-23", "2024-08-16"),
+    @("2024-08-17", "2024-11-11"),
+    @("2024-11-12", "2025-02-05"),
+    @("2025-02-06", "2025-04-30")
+)
+
+$workDir = $PSScriptRoot
+Set-Location $workDir
+
+Write-Output "启动 6 个并行采集进程..."
+
+for ($i = 0; $i -lt 6; $i++) {
+    $cookie = $COOKIES[$i]
+    $startDate = $DATE_RANGES[$i][0]
+    $endDate = $DATE_RANGES[$i][1]
+    $logFile = "$workDir\collect-$($i+1).log"
+
+    # 用 cmd.exe 设置环境变量并启动，避免 PowerShell 转义问题
+    $cmdLine = "set `"WEIBO_COOKIES=$cookie`" & set `"NODE_OPTIONS=--max-old-space-size=6144`" & set `"START_DATE=$startDate`" & set `"END_DATE=$endDate`" & cd /d `"$workDir`" & npx tsx collect-unified.ts > `"$logFile`" 2>&1"
+
+    Start-Process -FilePath "cmd.exe" -ArgumentList "/c", $cmdLine -WindowStyle Hidden
+
+    Write-Output "进程 $($i+1): $startDate ~ $endDate -> collect-$($i+1).log"
+    Start-Sleep -Seconds 3
+}
+
+Write-Output "`n全部启动完成。查看日志："
+Write-Output "  Get-Content collect-1.log -Tail 10"
+Write-Output "  Get-Content collect-6.log -Tail 10"

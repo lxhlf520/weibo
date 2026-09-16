@@ -1,0 +1,35 @@
+# 恢复采集启动器（冒烟/全量两用）【脱敏模板】
+# 使用前：复制本文件为 _resume.ps1，填入真实代理URL与账号索引后运行
+# 用法:
+#   powershell -File _resume.ps1 -Only yaan    # 只启动 yaan（冒烟验证）
+#   powershell -File _resume.ps1 -Only rest    # 启动其余 9 个
+#   powershell -File _resume.ps1               # 全部 10 个
+param([string]$Only = '', [string]$Rate = '1500')
+$dir = $PSScriptRoot
+
+# 分配表: @(worker名, 代理URL, 账号索引) — 与 _run-workers.ps1 一致
+# 代理URL 格式: http://用户名:密码@代理IP:端口
+$map = @(
+  @('suzhou',   'http://<代理用户名>:<代理密码>@<代理IP1>:<端口>', '0,1'),
+  @('jinzhong', 'http://<代理用户名>:<代理密码>@<代理IP2>:<端口>', '2,3'),
+  @('zibo',     'http://<代理用户名>:<代理密码>@<代理IP3>:<端口>', '4,5'),
+  @('daqing',   'http://<代理用户名>:<代理密码>@<代理IP4>:<端口>', '6,7'),
+  @('yuncheng', 'http://<代理用户名>:<代理密码>@<代理IP5>:<端口>', '8,9'),
+  @('lanzhou',  'http://<代理用户名>:<代理密码>@<代理IP6>:<端口>', '10,11'),
+  @('lasa',     'http://<代理用户名>:<代理密码>@<代理IP7>:<端口>', '12,13'),
+  @('yaan',     'http://<代理用户名>:<代理密码>@<代理IP8>:<端口>', '14,15'),
+  @('qqhe',     'http://<代理用户名>:<代理密码>@<代理IP9>:<端口>', '16,17'),
+  @('ankang',   'http://<代理用户名>:<代理密码>@<代理IP10>:<端口>', '18,19')
+)
+
+foreach ($m in $map) {
+  $nm = $m[0]; $u = $m[1]; $ck = $m[2]
+  if ($Only -eq 'yaan' -and $nm -ne 'yaan') { continue }
+  if ($Only -eq 'rest' -and $nm -eq 'yaan') { continue }
+  $inner = "Set-Location '$dir'; `$env:HTTPS_PROXY='$u'; `$env:HTTP_PROXY='$u'; node --use-env-proxy trace-worker.mjs --worker=$nm --from-db=test_experiment --cookies=$ck --rate=$Rate *> '_worker_$nm.log'"
+  $enc = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($inner))
+  Start-Process -FilePath 'powershell' -ArgumentList '-NoProfile','-EncodedCommand',$enc -WindowStyle Hidden
+  Write-Host "启动 worker: $nm → 账号 [$ck]"
+  Start-Sleep -Seconds 2
+}
+Write-Host 'DONE'

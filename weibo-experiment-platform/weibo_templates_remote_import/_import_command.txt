@@ -1,0 +1,5 @@
+方式A（推荐，mongosh 脚本，幂等+禁用旧模板）:
+  mongosh "mongodb://<user>:<pass>@<host>:27017/<dbname>" weibo_templates_import_remote.js
+
+方式B（mongoimport，需要集合上有 {post_group:1, content:1} 唯一索引才能正确 upsert）:
+  mongoimport --uri "mongodb://<user>:<pass>@<host>:27017/<dbname>" --collection weibo_comment_templates --mode upsert --upsertFields post_group,content --file weibo_comment_templates.jsonl

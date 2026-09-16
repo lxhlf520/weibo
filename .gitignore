@@ -1,0 +1,63 @@
+# ================= 依赖与构建产物 =================
+node_modules/
+.pnpm-store/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# ================= 数据与备份（严禁入库） =================
+_dump/
+_deploy_dump/
+*.zip
+weibo_cookies.json
+
+# ================= 环境变量（模板见 .env.example） =================
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ================= 含凭据的启动脚本（真实版不入库，模板见同名 *.example） =================
+robert-comments/_resume.ps1
+robert-comments/_run-workers.ps1
+robert-comments/_run-batch.ps1
+robert-comments/start-*.ps1
+robert-comments/_*.json
+weibo-experiment-platform/start-scheduler.bat
+
+# ================= 运行日志 =================
+*.log
+logs/
+
+# ================= 浏览器 profile（含登录态） =================
+chrome-*/
+**/chrome-weibo-profile*/
+.git-backup/
+
+# ================= 嵌套 git 仓库（源机平台遗留的 .git；被忽略后 git 将平台目录按普通目录处理） =================
+**/.git/
+
+# ================= Python =================
+__pycache__/
+.venv/
+
+# ================= 调试/探查脚本（仓库只留生产核心） =================
+robert-comments/_*.mjs
+robert-comments/_*.ts
+robert-comments/probe-*.ts
+robert-comments/test-*.ts
+# 保留的运维工具（对上两行模式的反向豁免）
+!robert-comments/_pause.mjs
+!robert-comments/_stat.mjs
+!robert-comments/_status.mjs
+!robert-comments/_check-accounts.mjs
+!robert-comments/_db-transfer.mjs
+weibo-experiment-platform/test-*.ts
+weibo-experiment-platform/_*.ts
+weibo-experiment-platform/add-accounts.ts
+weibo-experiment-platform/check-accounts.ts
+weibo-experiment-platform/insert-account.ts
+weibo-experiment-platform/insert-extra-accounts.ts
+weibo-experiment-platform/mock-browser-client.js

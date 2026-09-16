@@ -1,0 +1,36 @@
+# 20 账号 × 10 住宅 IP 采集启动器【脱敏模板】
+# 使用前：复制本文件为 _run-workers.ps1，填入真实代理URL后运行
+# 每个 worker = 1 个出口 IP + 2 个账号（账号按扫码入库顺序编号 0-19）
+# 用法:
+#   powershell -File _run-workers.ps1              # rate=1500 → 每账号 3s 间隔，每 IP ≤40 req/min，全局 ≤400 req/min
+#   powershell -File _run-workers.ps1 -Rate 2000   # 爬坡（首小时 ~70% 速率），跑稳后再满速
+# 注意: worker 以独立进程后台运行（关窗/退出不受影响）；硬停止会残留 working 任务，重启前重置为 pending
+param([string]$Rate = '1500')
+$dir = $PSScriptRoot
+
+# 分配表: @(代理名, 代理URL, 账号索引)
+# 代理URL 格式: http://用户名:密码@代理IP:端口
+$map = @(
+  @('suzhou',   'http://<代理用户名>:<代理密码>@<代理IP1>:<端口>', '0,1'),
+  @('jinzhong', 'http://<代理用户名>:<代理密码>@<代理IP2>:<端口>', '2,3'),
+  @('zibo',     'http://<代理用户名>:<代理密码>@<代理IP3>:<端口>', '4,5'),
+  @('daqing',   'http://<代理用户名>:<代理密码>@<代理IP4>:<端口>', '6,7'),
+  @('yuncheng', 'http://<代理用户名>:<代理密码>@<代理IP5>:<端口>', '8,9'),
+  @('lanzhou',  'http://<代理用户名>:<代理密码>@<代理IP6>:<端口>', '10,11'),
+  @('lasa',     'http://<代理用户名>:<代理密码>@<代理IP7>:<端口>', '12,13'),
+  @('yaan',     'http://<代理用户名>:<代理密码>@<代理IP8>:<端口>', '14,15'),
+  @('qqhe',     'http://<代理用户名>:<代理密码>@<代理IP9>:<端口>', '16,17'),
+  @('ankang',   'http://<代理用户名>:<代理密码>@<代理IP10>:<端口>', '18,19')
+)
+
+foreach ($m in $map) {
+  $nm = $m[0]; $u = $m[1]; $ck = $m[2]
+  $inner = "Set-Location '$dir'; `$env:HTTPS_PROXY='$u'; `$env:HTTP_PROXY='$u'; node --use-env-proxy trace-worker.mjs --worker=$nm --from-db=test_experiment --cookies=$ck --rate=$Rate *> '_worker_$nm.log'"
+  $enc = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($inner))
+  Start-Process -FilePath 'powershell' -ArgumentList '-NoProfile','-EncodedCommand',$enc -WindowStyle Hidden
+  Write-Host "启动 worker: $nm → 账号 [$ck]"
+}
+Start-Sleep -Seconds 8
+Get-ChildItem _worker_*.log | ForEach-Object { Write-Host ("{0} ({1} bytes)" -f $_.Name, $_.Length) }
+Write-Host '实时查看: Get-Content _worker_yaan.log -Wait -Tail 20'
+# 停止全部: Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object { $_.CommandLine -match 'trace-worker' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }

@@ -1,0 +1,9 @@
+# 独立于 IDE 会话启动定期重跑进程（每 3 天自动重跑，日志写 periodic.log）【脱敏模板】
+# 使用前：复制本文件为 start-collect.ps1，填入 WEIBO_COOKIES
+$env:WEIBO_COOKIES = "<微博Cookie>"
+$env:NODE_OPTIONS = "--max-old-space-size=6144"
+Set-Location $PSScriptRoot
+$logFile = Join-Path $PSScriptRoot "periodic.log"
+# 启动定期重跑 wrapper（内部循环：清断点 → 采集 → 等待 3 天）
+Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", (Join-Path $PSScriptRoot "periodic-run.ps1") -WorkingDirectory $PSScriptRoot -WindowStyle Hidden
+Write-Output "定期重跑进程已启动，日志: $logFile"
