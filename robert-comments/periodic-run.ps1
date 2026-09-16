@@ -2,10 +2,10 @@
 # 日志追加到 periodic.log，进程脱离 IDE 会话运行
 
 $intervalSeconds = 3 * 24 * 3600  # 3 天
-$logFile = "d:\PycharmProjects\AiSpiderProject\weibo\robert-comments\periodic.log"
-$errFile = "d:\PycharmProjects\AiSpiderProject\weibo\robert-comments\periodic.err.log"
+$logFile = Join-Path $PSScriptRoot "periodic.log"
+$errFile = Join-Path $PSScriptRoot "periodic.err.log"
 
-Set-Location "d:\PycharmProjects\AiSpiderProject\weibo\robert-comments"
+Set-Location $PSScriptRoot
 
 while ($true) {
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
